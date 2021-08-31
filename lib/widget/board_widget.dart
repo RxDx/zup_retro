@@ -28,8 +28,7 @@ class _BoardWidgetState extends State<BoardWidget> {
       appBar: AppBar(
         title: Text(widget.board.id + ' - Sprint $_counter'),
       ),
-      body:
-      ReorderableListView.builder(
+      body: ReorderableListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.all(16),
         itemCount: widget.board.columns.length,

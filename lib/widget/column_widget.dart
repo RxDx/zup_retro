@@ -22,6 +22,12 @@ class _ColumnWidgetState extends State<ColumnWidget> {
     });
   }
 
+  void _onDelete(int index) {
+    setState(() {
+      widget.column.cards.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,8 +47,9 @@ class _ColumnWidgetState extends State<ColumnWidget> {
                   itemCount: widget.column.cards.length,
                   itemBuilder: (BuildContext context, int index) {
                     return CardWidget(
-                        key: Key('$index'),
-                        card: widget.column.cards[index]
+                      key: Key('$index'),
+                      card: widget.column.cards[index],
+                      onDelete: () => _onDelete(index),
                     );
                   },
                   onReorder: (oldIndex, newIndex) {

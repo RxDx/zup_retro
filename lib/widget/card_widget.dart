@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../model/card.dart' as zc;
 
 class CardWidget extends StatefulWidget {
-  CardWidget({Key? key, required this.card}): super(key: key);
+  CardWidget({Key? key, required this.card, required this.onDelete}): super(key: key);
 
   final zc.Card card;
+  final VoidCallback onDelete;
 
   @override
   _CardWidgetState createState() => _CardWidgetState();
@@ -21,8 +22,11 @@ class _CardWidgetState extends State<CardWidget> {
             style: Theme.of(context).textTheme.bodyText2,
             textScaleFactor: 0.9,
           ),
-          trailing: Icon(Icons.delete_rounded),
-          onTap: () { },
+          trailing: IconButton(
+            icon: Icon(Icons.delete_rounded),
+            onPressed: widget.onDelete,
+          ),
+          onTap: () {},
         )
     );
   }
