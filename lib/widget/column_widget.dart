@@ -34,36 +34,38 @@ class _ColumnWidgetState extends State<ColumnWidget> {
         width: 300,
         height: double.infinity,
         child: Card(
-            child: ListView(
+            child: ReorderableListView(
               padding: EdgeInsets.all(16),
+              header: Text(
+                widget.column.id,
+                key: Key('title_text'),
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
               children: [
-                Text(
-                  widget.column.id,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.subtitle1,
+                for (int index = 0; index < widget.column.cards.length; index++)
+                  CardWidget(
+                    key: Key('$index'),
+                    card: widget.column.cards[index],
+                    onDelete: () => _onDelete(index),
+                  ),
+                TextButton(
+                    key: Key('add_card_button'),
+                    onPressed: _addCard,
+                    child: Text("Adicionar novo card")
                 ),
-                ReorderableListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.column.cards.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return CardWidget(
-                      key: Key('$index'),
-                      card: widget.column.cards[index],
-                      onDelete: () => _onDelete(index),
-                    );
-                  },
-                  onReorder: (oldIndex, newIndex) {
-                    setState(() {
-                      if (oldIndex < newIndex) {
-                        newIndex -= 1;
-                      }
-                      final zCard.Card item = widget.column.cards.removeAt(oldIndex);
-                      widget.column.cards.insert(newIndex, item);
-                    });
-                  },
-                ),
-                TextButton(onPressed: _addCard, child: Text("Adicionar novo card")),
               ],
+              onReorder: (oldIndex, newIndex) {
+                if (oldIndex == widget.column.cards.length ||
+                    newIndex == widget.column.cards.length + 1) return;
+                setState(() {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+                  final zCard.Card item = widget.column.cards.removeAt(oldIndex);
+                  widget.column.cards.insert(newIndex, item);
+                });
+              },
             )
         )
     );
