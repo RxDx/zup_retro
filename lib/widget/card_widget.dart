@@ -13,12 +13,27 @@ class CardWidget extends StatefulWidget {
 
 class _CardWidgetState extends State<CardWidget> {
 
+  bool _isEditing = false;
+
   @override
   Widget build(BuildContext context) {
     return Card(
         child: ListTile(
-          title: Text(
-            widget.card.id,
+          title: _isEditing ?
+          TextField(
+            autofocus: true,
+            controller: TextEditingController()..text = widget.card.text ?? "",
+            onSubmitted: (value) {
+              setState(() {
+                if (value.isNotEmpty) {
+                  widget.card.text = value;
+                }
+                _isEditing = false;
+              });
+            },
+          ) :
+          Text(
+            widget.card.textOrPlaceholder,
             style: Theme.of(context).textTheme.bodyText2,
             textScaleFactor: 0.9,
           ),
@@ -27,7 +42,11 @@ class _CardWidgetState extends State<CardWidget> {
             color: Colors.redAccent,
             onPressed: widget.onDeleteCard,
           ),
-          onTap: () {},
+          onTap: () {
+            setState(() {
+              _isEditing = true;
+            });
+          },
         )
     );
   }
