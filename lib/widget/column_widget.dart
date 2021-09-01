@@ -15,6 +15,8 @@ class ColumnWidget extends StatefulWidget {
 
 class _ColumnWidgetState extends State<ColumnWidget> {
 
+  bool _isEditing = false;
+
   void _addCard() {
     setState(() {
       widget.column.cards.add(
@@ -40,10 +42,26 @@ class _ColumnWidgetState extends State<ColumnWidget> {
               header: Row(
                 children: [
                   Expanded(
-                    child: Text(
-                      widget.column.id,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.subtitle1,
+                    child: _isEditing ?
+                    TextField(
+                      autofocus: true,
+                      controller: TextEditingController()..text = widget.column.nameOrPlaceholder,
+                      onSubmitted: (value) {
+                        setState(() {
+                          if (value.isNotEmpty) {
+                            widget.column.name = value;
+                          }
+                          _isEditing = false;
+                        });
+                      },
+                    ) :
+                    InkWell(
+                      onTap: () => setState(() => _isEditing = true),
+                      child: Text(
+                        widget.column.nameOrPlaceholder,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
                     ),
                   ),
                   IconButton(

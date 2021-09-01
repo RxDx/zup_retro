@@ -19,8 +19,8 @@ class MyApp extends StatelessWidget {
           board: Board(
             "ZupRetro",
             [
-              zColumn.Column("Continuar fazendo", []),
-              zColumn.Column("Podemos melhorar", []),
+              zColumn.Column(UniqueKey().toString(), name: "Continuar fazendo 😎"),
+              zColumn.Column(UniqueKey().toString(), name: "Podemos melhorar 🤔"),
             ]
           )
       ),

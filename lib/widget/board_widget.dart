@@ -18,7 +18,7 @@ class _BoardWidgetState extends State<BoardWidget> {
   void _incrementCounter() {
     setState(() {
       _counter++;
-      widget.board.columns.add(zc.Column("Nova coluna", []));
+      widget.board.columns.add(zc.Column(UniqueKey().toString()));
     });
   }
 

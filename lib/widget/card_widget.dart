@@ -42,11 +42,7 @@ class _CardWidgetState extends State<CardWidget> {
             color: Colors.redAccent,
             onPressed: widget.onDeleteCard,
           ),
-          onTap: () {
-            setState(() {
-              _isEditing = true;
-            });
-          },
+          onTap: () => setState(() => _isEditing = true),
         )
     );
   }
