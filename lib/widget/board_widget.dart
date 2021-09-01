@@ -22,6 +22,12 @@ class _BoardWidgetState extends State<BoardWidget> {
     });
   }
 
+  void _onDeleteColumn(int index) {
+    setState(() {
+      widget.board.columns.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +39,11 @@ class _BoardWidgetState extends State<BoardWidget> {
         padding: const EdgeInsets.all(16),
         itemCount: widget.board.columns.length,
         itemBuilder:  (BuildContext context, int index) {
-          return ColumnWidget(key: Key('$index'), column: widget.board.columns[index]);
+          return ColumnWidget(
+            key: Key('$index'),
+            column: widget.board.columns[index],
+            onDeleteColumn: () => _onDeleteColumn(index),
+          );
         },
         onReorder: (oldIndex, newIndex) {
           setState(() {
