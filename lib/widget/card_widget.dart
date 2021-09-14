@@ -14,6 +14,28 @@ class CardWidget extends StatefulWidget {
 class _CardWidgetState extends State<CardWidget> {
 
   bool _isEditing = false;
+  FocusNode _focus = FocusNode();
+
+  @override
+  void initState() {
+    _focus.addListener(_onFocusChange);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focus.removeListener(_onFocusChange);
+    super.dispose();
+  }
+
+  void _onFocusChange(){
+    if (!_focus.hasFocus) {
+      setState(() {
+        _isEditing = false;
+      });
+    }
+    debugPrint("Focus: "+_focus.hasFocus.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +44,7 @@ class _CardWidgetState extends State<CardWidget> {
           title: _isEditing ?
           TextField(
             autofocus: true,
+            focusNode: _focus,
             controller: TextEditingController()..text = widget.card.text ?? "",
             onSubmitted: (value) {
               setState(() {
@@ -42,7 +65,15 @@ class _CardWidgetState extends State<CardWidget> {
             color: Colors.redAccent,
             onPressed: widget.onDeleteCard,
           ),
-          onTap: () => setState(() => _isEditing = true),
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+            setState(() {
+              _isEditing = true;
+            });
+          },
         )
     );
   }

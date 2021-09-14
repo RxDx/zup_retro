@@ -16,6 +16,28 @@ class ColumnWidget extends StatefulWidget {
 class _ColumnWidgetState extends State<ColumnWidget> {
 
   bool _isEditing = false;
+  FocusNode _focus = FocusNode();
+
+  @override
+  void initState() {
+    _focus.addListener(_onFocusChange);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focus.removeListener(_onFocusChange);
+    super.dispose();
+  }
+
+  void _onFocusChange(){
+    if (!_focus.hasFocus) {
+      setState(() {
+        _isEditing = false;
+      });
+    }
+    debugPrint("Focus: "+_focus.hasFocus.toString());
+  }
 
   void _addCard() {
     setState(() {
@@ -45,6 +67,10 @@ class _ColumnWidgetState extends State<ColumnWidget> {
                     child: _isEditing ?
                     TextField(
                       autofocus: true,
+                      focusNode: _focus,
+                      onChanged: (a) {
+                        debugPrint("TF changed: "+a.toString());
+                      },
                       controller: TextEditingController()..text = widget.column.nameOrPlaceholder,
                       onSubmitted: (value) {
                         setState(() {
@@ -56,7 +82,15 @@ class _ColumnWidgetState extends State<ColumnWidget> {
                       },
                     ) :
                     InkWell(
-                      onTap: () => setState(() => _isEditing = true),
+                      onTap: () {
+                        FocusScopeNode currentFocus = FocusScope.of(context);
+                        if (!currentFocus.hasPrimaryFocus) {
+                          currentFocus.unfocus();
+                        }
+                        setState(() {
+                          _isEditing = true;
+                        });
+                      },
                       child: Text(
                         widget.column.nameOrPlaceholder,
                         textAlign: TextAlign.center,
